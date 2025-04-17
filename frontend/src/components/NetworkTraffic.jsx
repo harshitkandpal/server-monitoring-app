@@ -182,6 +182,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { format, parseISO } from 'date-fns';
+import { useTheme } from '../components/ThemeContext'; // Assuming you have a custom hook for dark mode
 
 ChartJS.register(
   CategoryScale,
@@ -195,6 +196,7 @@ ChartJS.register(
 );
 
 function NetworkTraffic() {
+  const { darkMode } = useTheme(); // Getting dark mode state
   const [selectedHours, setSelectedHours] = useState('all');
   const [trafficData, setTrafficData] = useState({
     data: [],
@@ -204,7 +206,6 @@ function NetworkTraffic() {
 
   const fetchNetworkTraffic = async (hours) => {
     try {
-      // Prepare query params conditionally
       const params = {};
       if (hours !== 'all') {
         params.hours = hours;
@@ -300,7 +301,7 @@ function NetworkTraffic() {
 
   if (trafficData.loading) {
     return (
-      <div className="dashboard-card flex items-center justify-center h-64">
+      <div className={`dashboard-card flex items-center justify-center h-64 ${darkMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>
         <div className="text-gray-500">Loading network traffic data...</div>
       </div>
     );
@@ -308,22 +309,22 @@ function NetworkTraffic() {
 
   if (trafficData.error) {
     return (
-      <div className="dashboard-card flex items-center justify-center h-64">
+      <div className={`dashboard-card flex items-center justify-center h-64 ${darkMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>
         <div className="text-red-500">{trafficData.error}</div>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-card">
+    <div className={`dashboard-card ${darkMode === 'dark' ? ' text-gray-100' : ' text-gray-800'}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <TrendingUp className="h-5 w-5 text-gray-700 mr-2" />
+          <TrendingUp className={`h-5 w-5 ${darkMode === 'dark' ? 'text-gray-300' : 'text-gray-700'} mr-2`} />
           <h3 className="text-lg font-medium">Network Traffic</h3>
         </div>
 
         <select 
-          className="text-sm border border-gray-300 rounded-md px-2 py-1"
+          className={`text-sm border ${darkMode === 'dark' ? 'border-gray-600 bg-gray-800 text-gray-200' : 'border-gray-300'} rounded-md px-2 py-1`}
           value={selectedHours}
           onChange={(e) => setSelectedHours(e.target.value)}
         >
